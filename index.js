@@ -27,6 +27,11 @@ const args = yargs
     alias: 'd',
     describe: 'Database name (default: the mongoUri db)'
   })
+  .option('endPoint', {
+    alias: 'e',
+    describe: 'S3 endpoint (nyc3.digitaloceanspaces.com)',
+    required: true,
+  })
   .option('folder', {
     alias: 'f',
     describe: 'folder'
@@ -63,21 +68,44 @@ const args = yargs
 
 const {mongoUri, dbName, folder, bucket, region, concurrency, accessKeyId, secretAccessKey} = args
 
-console.log('Your options: ', {mongoUri, dbName, folder, bucket, region, concurrency, accessKeyId, secretAccessKey})
+console.log('Your options: ', {mongoUri, dbName, folder, bucket, endPoint, region, concurrency, accessKeyId, secretAccessKey})
 
 
 const dbOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
 // setup AWS credentials
-if (secretAccessKey && accessKeyId) {
+/*if (secretAccessKey && accessKeyId) {
   AWS.config.update({accessKeyId, secretAccessKey})
-}
+}*/
 
 // setup AWS clients
-const s3 = new AWS.S3({
+/*const s3 = new AWS.S3({
   params: {Bucket: bucket},
   region: region
-})
+})*/
+
+
+//Define S3 options
+var s3 = {
+  bucket: bucket,
+  //baseUrl: filesUrl,
+  region: region,
+  directAccess: true,
+  globalCacheControl: "public, max-age=31536000",
+  signatureVersion: 'v4',
+  signatureCache: true,
+  s3overrides: {
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    endpoint: endPoint
+  },
+  /*validateFilename: (filename) => {
+    if (filename.length > 1024) {
+       return 'Filename too long.';
+     }
+     return null; // Return null on success
+  },*/
+}
 
 let db
 let connection
