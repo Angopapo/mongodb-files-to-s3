@@ -32,6 +32,11 @@ const args = yargs
     describe: 'S3 endpoint (nyc3.digitaloceanspaces.com)',
     required: true,
   })
+  .option('baseUrl', {
+    alias: 'u',
+    describe: 'S3 endpoint (https://cdn.domain.com or https://projectname.nyc3.cdn.digitaloceanspaces.com)',
+    required: true,
+  })
   .option('folder', {
     alias: 'f',
     describe: 'folder'
@@ -68,7 +73,7 @@ const args = yargs
 
 const {mongoUri, dbName, folder, bucket, region, concurrency, accessKeyId, secretAccessKey} = args
 
-console.log('Your options: ', {mongoUri, dbName, folder, bucket, endPoint, region, concurrency, accessKeyId, secretAccessKey})
+console.log('Your options: ', {mongoUri, dbName, folder, bucket, endPoint, baseUrl, region, concurrency, accessKeyId, secretAccessKey})
 
 
 const dbOptions = {useNewUrlParser: true, useUnifiedTopology: true}
@@ -88,7 +93,7 @@ const dbOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 //Define S3 options
 var s3 = {
   bucket: bucket,
-  //baseUrl: filesUrl,
+  baseUrl: baseUrl,
   region: region,
   directAccess: true,
   globalCacheControl: "public, max-age=31536000",
