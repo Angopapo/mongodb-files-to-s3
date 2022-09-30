@@ -1,7 +1,7 @@
-# migrate-mongodb-files-to-s3
+# mongodb-files-to-s3
 
 how to use:
 
-npm i -g @back4app/migrate-mongodb-files-to-s3
+npm i -g mongodb-files-to-s3
 
-migrate --mongoUri mongodb://user:pass@host:port/db --appId your_appId --bucket your_bucket
+migrate --mongoUri "mongodb+srv://..." --bucket "bucketname" --region "nyc3" --endPoint "nyc3.digitaloceanspaces.com" --accessKeyId "XXXXXXXX" --secretAccessKey "xxxxxxxxxx"

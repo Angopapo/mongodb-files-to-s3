@@ -1,16 +1,16 @@
 {
-  "name": "@back4app/migrate-mongodb-files-to-s3",
-  "version": "0.0.2",
-  "description": "Tool to migrate from mongodb files to s3",
+  "name": "mongodb-files-to-s3",
+  "version": "1.1.0",
+  "description": "This tool can be used to migrate from mongodb files to s3 like AWS or Digital ocean spaces",
   "main": "index.js",
   "scripts": {},
   "bin": {
     "migrate": "./index.js"
   },
-  "author": "@paivaric",
+  "author": "@singamaravilho",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.524.0",
+    "aws-sdk": "^2.1226.0",
     "bluebird": "^3.5.5",
     "mime": "^2.4.4",
     "mongodb": "^3.3.2",

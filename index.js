@@ -32,24 +32,19 @@ const args = yargs
     describe: 'S3 endpoint (nyc3.digitaloceanspaces.com)',
     required: true,
   })
-  .option('baseUrl', {
-    alias: 'u',
-    describe: 'S3 endpoint (https://cdn.domain.com or https://projectname.nyc3.cdn.digitaloceanspaces.com)',
-    required: true,
-  })
   .option('folder', {
     alias: 'f',
     describe: 'folder'
   })
   .option('bucket', {
     alias: 'b',
-    describe: 'bucket name',
+    describe: 'bucket name ex: appname',
     required: true
   })
   .option('region', {
     alias: 'r',
-    describe: 'bucket region',
-    default: 'us-east-1'
+    describe: 'bucket region ex: nyc3',
+    required: true
   })
   .option('accessKeyId', {
     alias: 'k',
@@ -71,46 +66,26 @@ const args = yargs
   .alias('version', 'v')
   .argv
 
-const {mongoUri, dbName, folder, bucket, region, concurrency, accessKeyId, secretAccessKey} = args
+const {mongoUri, dbName, folder, bucket, region, endPoint, concurrency, accessKeyId, secretAccessKey} = args
 
-console.log('Your options: ', {mongoUri, dbName, folder, bucket, endPoint, baseUrl, region, concurrency, accessKeyId, secretAccessKey})
+console.log('Your options: ', {mongoUri, dbName, folder, bucket, endPoint, region, concurrency, accessKeyId, secretAccessKey})
 
 
 const dbOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
 // setup AWS credentials
-/*if (secretAccessKey && accessKeyId) {
-  AWS.config.update({accessKeyId, secretAccessKey})
-}*/
-
-// setup AWS clients
-/*const s3 = new AWS.S3({
-  params: {Bucket: bucket},
-  region: region
-})*/
-
+if (secretAccessKey && accessKeyId) {
+  AWS.config.update({accessKeyId, secretAccessKey, region:region})
+}
 
 //Define S3 options
-var s3 = {
-  bucket: bucket,
-  baseUrl: baseUrl,
+
+const spacesEndpoint = new AWS.Endpoint(endPoint);
+const s3 = new AWS.S3({
+  params: {Bucket: bucket},
   region: region,
-  directAccess: true,
-  globalCacheControl: "public, max-age=31536000",
-  signatureVersion: 'v4',
-  signatureCache: true,
-  s3overrides: {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-    endpoint: endPoint
-  },
-  /*validateFilename: (filename) => {
-    if (filename.length > 1024) {
-       return 'Filename too long.';
-     }
-     return null; // Return null on success
-  },*/
-}
+  endpoint: spacesEndpoint,
+})
 
 let db
 let connection
